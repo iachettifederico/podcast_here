@@ -21,7 +21,8 @@ module PodcastHere
 
     def rss
       builder.instruct!
-      builder.feed("xmlns"=>"http://www.w3.org/2005/Atom", "xmlns:dc"=>"http://purl.org/dc/elements/1.1/") do
+      builder.feed("xmlns"=>"http://www.w3.org/2005/Atom",
+                   "xmlns:dc"=>"http://purl.org/dc/elements/1.1/") do
         builder.author do
           builder.name author
         end
@@ -31,7 +32,6 @@ module PodcastHere
         builder.tag! "dc:date", "2017-06-12T01:02:03+00:00"
         entries.each do |entry|
           name = entry[:name]
-          length = entry[:length] || "0"
           date = entry[:updated].strftime("%Y-%m-%dT%H:%M:%S%:z")
           entry_url = [base_url, name].compact.join(":SLASH:").gsub(/\/?:SLASH:/, "/")
 
@@ -39,7 +39,8 @@ module PodcastHere
             builder.id name
             builder.link(href: entry_url)
             builder.title name
-            builder.enclosure(url: name, length: length, type: mime(name))
+            builder.link(rel: "enclosure", type: mime(name), href: entry_url)
+
             builder.updated date
             builder.tag! "dc:date", date
           end
@@ -48,14 +49,6 @@ module PodcastHere
 
       builder.target!
     end
-
-    # def enclosure(entry)
-    #   case entry[:name]
-    #   when /\.mp3$/
-
-    #     "<enclosure url=\"example\" length=\"0\" type=\"text/plain\"/>"
-    #   end
-    # end
 
     def mime(name)
       case name
