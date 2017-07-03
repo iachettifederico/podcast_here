@@ -1,4 +1,6 @@
 require "podcast_here/version"
+require "podcast_here/entry"
+
 require "builder"
 
 module PodcastHere
@@ -10,7 +12,7 @@ module PodcastHere
     attr_reader :base_url
 
     def initialize(entries, title: "PodcastHere Feed", author: "PodcastHere", base_url: nil, date: Time.now)
-      @entries = entries
+      @entries = entries.map {|attrs| Entry.new(**attrs)}
       @date = date
       @title = title
       @author = author
@@ -31,23 +33,26 @@ module PodcastHere
         builder.updated "2017-06-12T01:02:03+00:00"
         builder.tag! "dc:date", "2017-06-12T01:02:03+00:00"
         entries.each do |entry|
-          name = entry[:name]
-          date = entry[:updated].strftime("%Y-%m-%dT%H:%M:%S%:z")
+          name = entry.name
           entry_url = [base_url, name].compact.join(":SLASH:").gsub(/\/?:SLASH:/, "/")
 
           builder.entry do
             builder.id name
             builder.link(href: entry_url)
             builder.title name
-            builder.link(rel: "enclosure", type: mime(name), href: entry_url)
+            builder.link(rel: "enclosure", type: entry.mime_type, href: entry_url)
 
-            builder.updated date
-            builder.tag! "dc:date", date
+            builder.updated entry.updated
+            builder.tag! "dc:date", entry.updated
           end
         end
       end
 
       builder.target!
+    end
+
+    def [](entry_name)
+      entries.find { |entry| entry.name == entry_name }
     end
 
     def mime(name)

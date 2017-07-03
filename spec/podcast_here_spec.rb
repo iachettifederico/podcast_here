@@ -304,4 +304,27 @@ RSpec.describe PodcastHere do
     expect(feed.rss).to eql(expected)
   end
 
+  context "fetching entries" do
+    it "finds an entry" do
+      files = [
+               {
+                name: "not_this_one",
+                updated: Time.now
+               },
+               {
+                name: "example.mp3",
+                updated: Time.new(2017, 2, 3)
+               },
+               {
+                name: "nor_this_one",
+                updated: Time.now
+               }
+              ]
+      feed = PodcastHere::FeedBuilder.new(files)
+
+      expected = PodcastHere::Entry.new(name: "example.mp3", updated: Time.new(2017, 2, 3))
+
+      expect(feed["example.mp3"] == expected).to eql(true)
+    end
+  end
 end
