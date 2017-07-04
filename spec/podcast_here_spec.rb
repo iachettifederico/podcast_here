@@ -304,6 +304,26 @@ RSpec.describe PodcastHere do
     expect(feed.rss).to eql(expected)
   end
 
+  it "sets the updated field" do
+    files = []
+    feed = PodcastHere::FeedBuilder.new(files, base_url: "http://example.com/", date: Time.new(2018, 7, 1, 2, 3, 4, 0))
+
+    expected = <<~EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <author>
+          <name>PodcastHere</name>
+        </author>
+        <id>PodcastHere Feed</id>
+        <title>PodcastHere Feed</title>
+        <updated>2018-07-01T02:03:04+00:00</updated>
+        <dc:date>2018-07-01T02:03:04+00:00</dc:date>
+      </feed>
+    EOF
+
+    expect(feed.rss).to eql(expected)
+  end
+
   context "fetching entries" do
     it "finds an entry" do
       files = [

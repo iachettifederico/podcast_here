@@ -22,7 +22,6 @@ module PodcastHere
       end
     end
 
-
     def ==(other)
       !! (name == other.name)
     end
