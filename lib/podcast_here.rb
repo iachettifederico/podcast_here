@@ -12,14 +12,19 @@ module PodcastHere
     attr_reader :date
     attr_reader :base_url
 
-    def initialize(entries, title: "PodcastHere Feed", author: "PodcastHere", base_url: nil, date: Time.now)
-      @entries = entries.map {|attrs| Entry.new(**attrs)}
-      @date = date.strftime("%Y-%m-%dT%H:%M:%S%:z")
-      @title = title
-      @author = author
+    def initialize(entries,
+                   title: "PodcastHere Feed",
+                   author: "PodcastHere",
+                   base_url: nil,
+                   date: Time.now)
+      
+      @entries  = entries.map {|attrs| Entry.new(**attrs)}
+      @date     = date.strftime("%Y-%m-%dT%H:%M:%S%:z")
+      @title    = title
+      @author   = author
       @base_url = base_url
 
-      @builder = Builder::XmlMarkup.new(indent: 2)
+      @builder  = Builder::XmlMarkup.new(indent: 2)
     end
 
     def rss
