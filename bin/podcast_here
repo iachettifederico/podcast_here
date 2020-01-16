@@ -1,13 +1,18 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "podcast_here"
 
 require "pathname"
+
+$LOAD_PATH.unshift(Pathname(File.join(__FILE__, "..", "..", "lib")).expand_path)
+
+require "podcast_here"
+
 require "roda"
 
 PORT     = "8080"
-DOMAIN   = "http://iachetti.dyndns.org"
+# DOMAIN   = "http://iachetti.dyndns.org"
+DOMAIN   = "http://192.168.0.4"
 BASE_URL = "#{DOMAIN}:#{PORT}/"
 
 class PodcastHere::WebServer < Roda
