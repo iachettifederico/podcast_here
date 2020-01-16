@@ -17,7 +17,7 @@ module PodcastHere
                    author: "PodcastHere",
                    base_url: nil,
                    date: Time.now)
-      
+
       @entries  = entries.map {|attrs| Entry.new(**attrs)}
       @date     = date.strftime("%Y-%m-%dT%H:%M:%S%:z")
       @title    = title
@@ -62,15 +62,5 @@ module PodcastHere
       entries.find { |entry| entry.name == entry_name }
     end
 
-    def mime(name)
-      case name
-      when /\.mp3/
-        "audio/mpeg"
-      when /\.ogg/
-        "audio/vorbis"
-      else
-        "text/plain"
-      end
-    end
   end
 end
